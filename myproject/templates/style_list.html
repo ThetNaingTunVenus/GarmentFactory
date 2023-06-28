@@ -28,7 +28,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="myLargeModalLabel">
-                            Large modal
+                            Create New Style Code
                         </h4>
                         <button
                                 type="button"
@@ -111,28 +111,21 @@
                 <td>{{p.ItemName}}</td>
                 <td>
                     <div class="table-actions">
-<!--                        <a href="{% url 'myapp:OrderQtyView' p.id %}" data-color=""-->
-<!--                           class="btn btn-sm btn-outline-primary">-->
-<!--                            &lt;!&ndash;                                            <i class="icon-copy dw dw-pencil"></i>&ndash;&gt;-->
-<!--                            <i class="micon dw dw-karate">&nbsp;Order</i>-->
-<!--                        </a>-->
 
-                        <!--                        =====-->
-                        <!-- Success modal -->
-
+<!-- -------------------------------------------------------------------- -->
 
                         <a
                                 href="#"
                                 class="btn btn-sm btn-outline-primary"
                                 data-toggle="modal"
-                                data-target="#success-modal{{p.StyleCode}}{{p.BuyerName}}{{p.ItemName}}{{p.Vendor}}"
+                                data-target="#success-modal{{p.id}}"
                                 type="button"
                         >
-                            <i class="micon dw dw-karate">&nbsp;CMP</i>
+                            NewOrder
                         </a>
                         <div
                                 class="modal fade"
-                                id="success-modal{{p.StyleCode}}{{p.BuyerName}}{{p.ItemName}}{{p.Vendor}}"
+                                id="success-modal{{p.id}}"
                                 tabindex="-1"
                                 role="dialog"
                                 aria-labelledby="exampleModalCenterTitle"
@@ -192,7 +185,7 @@
                                                 class="btn btn-success"
 
                                         >
-                                            Save
+                                            Save New Order
                                         </button>
 
                                     </div>
@@ -201,7 +194,7 @@
                             </div>
                         </div>
 
-                        <!--===-->
+                        <!--=--------------------------------==-->
 
                     </div>
                 </td>

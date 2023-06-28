@@ -2,7 +2,7 @@ import datetime
 
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Sum,Count,F
+from django.db.models import Sum,Count,F,Avg
 from django.http import HttpResponse,HttpResponseRedirect
 from django.views.generic import TemplateView, View, CreateView, DetailView,FormView
 from django.urls import reverse_lazy
@@ -293,7 +293,10 @@ class ProductionInputView(View):
         elif not input_qty:
             message = 'please enter input qty'
         if not message:
-            inputqty = ProductionInput(line=line,style=style,input_qty=input_qty)
+            target = ProductionLine.objects.get(ProductionLine=line)
+            dtarget = target.daily_target
+            # print(dtarget)
+            inputqty = ProductionInput(line=line,style=style,input_qty=input_qty,daily_target=dtarget)
             inputqty.save()
             line = ProductionLine.objects.all()
             style = Style.objects.all()
@@ -306,6 +309,180 @@ class ProductionInputView(View):
             context = {'line': line, 'style': style,'message':message}
             return render(request, 'ProductionInput.html', context)
 
+
+class DailyProductionView(View):
+    def get(self,request):
+        line = ProductionLine.objects.all()
+        style = Style.objects.all()
+        daily_target_view = DailyProductionOuput.objects.values('line','daily_target').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty')).filter(date=datetime.datetime.now())
+        context={'line':line,'style':style, 'daily_target_view':daily_target_view}
+        return render(request, 'DailyProductionView.html', context)
+
+    def post(self,request):
+        pass
+
+class DailyTargetView(View):
+    def get(self,request):
+        line = ProductionLine.objects.all()
+        style = Style.objects.all()
+        pro_input = ProductionInput.objects.filter(status=False)
+        daily_target_view = DailyProductionOuput.objects.filter(date=datetime.datetime.now())
+        context={'line':line,'style':style, 'pro_input':pro_input, 'daily_target_view':daily_target_view}
+        return render(request, 'DailyTargetView.html', context)
+
+    def post(self,request):
+        line = request.POST.get('line')
+        style = request.POST.get('style')
+        input_qty = request.POST.get('input_qty')
+        target_qty = request.POST.get('target_qty')
+        st = OrderQty.objects.filter(style=style)
+        a=st[0].cmp
+
+        # target = ProductionLine.objects.get(ProductionLine=line)
+        # dtarget = target.daily_target
+
+        tar = DailyProductionOuput(line=line,style=style,input_qty=input_qty,daily_target=target_qty, cmp_amount=a)
+        tar.save()
+        pro_input = ProductionInput.objects.filter(status=False,line=line).update(daily_target=target_qty)
+        return redirect('myapp:DailyTargetView')
+
+
+def DailyTargetFilterView(request):
+    pro_input = ProductionInput.objects.all()
+    line = ProductionLine.objects.all()
+    li = request.GET.get('pline')
+    if li == None:
+        line = ProductionLine.objects.all()
+        style = Style.objects.all()
+        pro_input = ProductionInput.objects.filter(status=False)
+        context={'line':line,'style':style, 'pro_input':pro_input}
+        return render(request, 'DailyTargetView.html', context)
+    else:
+        line = ProductionLine.objects.all()
+        style = Style.objects.all()
+        pro_input = ProductionInput.objects.filter(line=li,status=False)
+        context={'line':line,'style':style, 'pro_input':pro_input}
+        return render(request, 'DailyTargetView.html', context)
+
+
+def LineDataEntryView(request):
+    pline = request.GET.get('pline')
+    po = DailyProductionOuput.objects.filter(line=pline,date=datetime.datetime.now())
+    context={'po':po}
+    return render(request, 'LineDataEntryView.html', context)
+
+class LineDataEntrySave(View):
+    def post(self,request):
+        shift_1 = request.POST.get('shift_1')
+        shift_2 = request.POST.get('shift_2')
+        shift_3 = request.POST.get('shift_3')
+        shift_4 = request.POST.get('shift_4')
+        shift_5 = request.POST.get('shift_5')
+        shift_6 = request.POST.get('shift_6')
+        shift_7 = request.POST.get('shift_7')
+        shift_8 = request.POST.get('shift_8')
+        shift_9 = request.POST.get('shift_9')
+        shift_10 = request.POST.get('shift_10')
+        shift_11 = request.POST.get('shift_11')
+        shift_12 = request.POST.get('shift_12')
+        data_id = request.POST.get('id')
+        style = request.POST.get('style')
+        cmp_amount = request.POST.get('cmp_amount')
+
+
+
+        total_shift_data = int(shift_1) + int(shift_2) + int(shift_3) + int(shift_4) + int(shift_5) + int(shift_6) + int(shift_7) + int(shift_8) + int(shift_9) + int(shift_10) + int(shift_11) + int(shift_12)
+
+        acc_total_cmp = int(total_shift_data) * float(cmp_amount)
+        # acc_men_cmp = float(acc_total_cmp)/
+        # to get menpower
+        line_name = DailyProductionOuput.objects.filter(id=data_id)
+        l = line_name[0].line
+        mp = DailyProductionLineMenPower.objects.filter(line=l,date=datetime.datetime.now())
+        op_qty = mp[0].num_operator
+        hp_qty = mp[0].num_helper
+        total_menpower = int(op_qty)+int(hp_qty)
+        acc_men_cmp = float(acc_total_cmp)/int(total_menpower)
+
+        
+        po = DailyProductionOuput.objects.filter(id=data_id).update(
+            shift_1=shift_1,
+            shift_2=shift_2,
+            shift_3=shift_3,
+            shift_4=shift_4,
+            shift_5=shift_5,
+            shift_6=shift_6,
+            shift_7=shift_7,
+            shift_8=shift_8,
+            shift_9=shift_9,
+            shift_10=shift_10,
+            shift_11=shift_11,
+            shift_12=shift_12,
+            total_output_qty=total_shift_data,
+            acc_total_cmp=acc_total_cmp,
+            menpower=total_menpower,
+            cmp_pr_menpower = acc_men_cmp
+            )
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+class DashboardView(View):
+    def get(self,request):
+        daily_target_view = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now())
+        
+        context = {'daily_target_view':daily_target_view}
+        return render(request, 'DashboardView.html', context)
+
+
+class DashboardColorView(TemplateView):
+    def get(self,request):
+        li = ProductionLine.objects.all()
+        # print(li[1].ProductionLine)
+        line1 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[0].ProductionLine)
+        line2 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[1].ProductionLine)
+        line3 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[2].ProductionLine)
+        line4 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[3].ProductionLine)
+        line5 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[4].ProductionLine)
+        line6 = DailyProductionOuput.objects.values('line','daily_target','wok_hr').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'), t_total_output_qty=Sum('total_output_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12')).filter(date=datetime.datetime.now(),line=li[5].ProductionLine)
+        
+
+        context = {'line1':line1,'line2':line2,'line3':line3,'line4':line4,'line5':line5,'line6':line6}
+        return render(request, 'DashboardColorView.html', context)
+    # template_name = 'DashboardColorView.html'
+
+
+
+class ProductionLineOutputDetail(View):
+    def get(self,request):
+        pline = request.GET.get('pline')
+        daily_rank = DailyProductionOuput.objects.values('line').annotate(sum=Sum('daily_target'),t_total_output_qty=Sum('total_output_qty')).filter(date=datetime.datetime.now())
+        daily_style = DailyProductionOuput.objects.values('style').filter(date=datetime.datetime.now(), line=pline)
+        work_hr = DailyProductionOuput.objects.filter(date=datetime.datetime.now(), line=pline)
+        wh = work_hr[0].wok_hr
+        dt = work_hr[0].daily_target
+        a = int(dt)/int(wh)
+        shift = int(a)
+
+
+        daily_target_view = DailyProductionOuput.objects.values('line').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12'),t_total_output_qty=Sum('total_output_qty')).filter(date=datetime.datetime.now(), line=pline)
+        context = {'daily_target_view':daily_target_view, 'daily_style':daily_style, 'shift':shift, 'pline':pline, 'dt':dt, 'daily_rank':daily_rank}
+        return render(request, 'ProductionLineOutputDetail.html', context)
+    # template_name = 'ProductionLineOutputDetail.html'
+    
+class DailyAttendanceView(View):
+    def get(self,request):
+        data = DailyProductionLineMenPower.objects.filter(date=datetime.datetime.now())
+        line = ProductionLine.objects.all()
+        context = {'data':data,'line':line}
+        return render(request, 'DailyAttendanceView.html', context)
+
+    def post(self,request):
+        pline = request.POST.get('pline')
+        op = request.POST.get('op')
+        hp = request.POST.get('hp')
+        mp = DailyProductionLineMenPower(line=pline,num_operator=op,num_helper=hp)
+        mp.save()
+        return redirect('myapp:DailyAttendanceView')
 
 
 

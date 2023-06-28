@@ -13,4 +13,19 @@ class ProductionLineAdmin(admin.ModelAdmin):
     list_display = ('id', 'ProductionLine')
 admin.site.register(ProductionLine,ProductionLineAdmin)
 
+class ProductionInputAdmin(admin.ModelAdmin):
+    list_display = ('id', 'line', 'style','input_qty','date')
+admin.site.register(ProductionInput,ProductionInputAdmin)
+
+
+class DailyProductionOuputAdmin(admin.ModelAdmin):
+    list_display = ('id', 'line', 'style')
+admin.site.register(DailyProductionOuput,DailyProductionOuputAdmin)
+
+class DailyProductionLineMenPowerAdmin(admin.ModelAdmin):
+    list_display = ('line','num_operator','num_helper','date')
+admin.site.register(DailyProductionLineMenPower,DailyProductionLineMenPowerAdmin)
+
+
+
 admin.site.register(OrderQty)

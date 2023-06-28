@@ -165,7 +165,7 @@
         <!--						</div>-->
         <!--					</form>-->
         <!--				</div>-->
-        <div><b class="text-primary">Musung Garment Factory</b></div>
+        <div><b class="text-primary">Garment Factory</b></div>
     </div>
     <div class="header-right">
         <div class="dashboard-setting user-notification">
@@ -189,7 +189,7 @@
                         data-toggle="dropdown"
                 >
 							<span class="user-icon">
-								<img src="{% static 'vendors/images/mlogo.jpg' %}" alt=""/>
+								<img src="{% static 'vendors/images/applogo.png' %}" alt=""/>
 							</span>
                     <span class="user-name"></span>
                 </a>
@@ -404,17 +404,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'myapp:BuyerView' %}" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-user-12"></span
-                                ><span class="mtext">Buyer</span>
+                    <a href="{% url 'myapp:DashboardColorView' %}" class="dropdown-toggle no-arrow">
+                                <span class="micon dw dw-home"></span
+                                ><span class="mtext">Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'myapp:StyleView' %}" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-karate"></span
-                                ><span class="mtext">Style</span>
-                    </a>
-                </li>
+                
                 <li>
                     <a href="{% url 'myapp:ETAView' %}" class="dropdown-toggle no-arrow">
 								<span class="micon dw dw-karate"></span
@@ -427,6 +422,19 @@
                                 ><span class="mtext">Report</span>
                     </a>
                 </li>
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle">
+                                <span class="micon bi bi-tools"></span
+                                ><span class="mtext">MR</span>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'myapp:StyleView' %}">Style#</a></li>
+                        <li><a href="{% url 'myapp:BuyerView' %}">Buyer</a></li>
+                        
+                        
+                        
+                    </ul>
+                </li>
 
                 <li class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle">
@@ -434,9 +442,13 @@
                                 ><span class="mtext">Production</span>
                     </a>
                     <ul class="submenu">
+                        
                         <li><a href="{% url 'myapp:ProductionInputView' %}">Input_Production</a></li>
-                        <li><a href="{% url 'myapp:BuyerView' %}">DailyProduction</a></li>
+                        <li><a href="{% url 'myapp:DailyAttendanceView' %}">Attendance</a></li>
+                        <li><a href="{% url 'myapp:DailyTargetView' %}">Daily Target</a></li>
+                        <li><a href="{% url 'myapp:DailyProductionView' %}">DailyProduction</a></li>
                         <li><a href="{% url 'myapp:ProductionLineView' %}">Production Line</a></li>
+                        
                     </ul>
                 </li>
                 <li class="dropdown">

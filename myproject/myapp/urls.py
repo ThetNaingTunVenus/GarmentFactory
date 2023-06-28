@@ -6,6 +6,10 @@ from .views import *
 app_name = 'myapp'
 urlpatterns = [
     path('', Test.as_view(), name='Test'),
+    path('DashboardView/', DashboardView.as_view(), name='DashboardView'),
+    path('DashboardColorView/', DashboardColorView.as_view(), name='DashboardColorView'),
+
+
     path('BuyerView/', BuyerView.as_view(), name='BuyerView'),
     path('StyleView/', StyleView.as_view(), name='StyleView'),
     path('ProductionLineView/', ProductionLineView.as_view(), name='ProductionLineView'),
@@ -17,5 +21,13 @@ urlpatterns = [
     path('ETAView/', ETAView.as_view(), name='ETAView'),
 
     path('ProductionInputView/', ProductionInputView.as_view(), name='ProductionInputView'),
+    path('DailyProductionView/', DailyProductionView.as_view(), name='DailyProductionView'),
+    path('DailyTargetView/', DailyTargetView.as_view(), name='DailyTargetView'),
+    path('DailyTargetFilterView/', DailyTargetFilterView, name='DailyTargetFilterView'),
+    path('LineDataEntryView/', LineDataEntryView, name='LineDataEntryView'),
+    path('LineDataEntrySave/', LineDataEntrySave.as_view(), name='LineDataEntrySave'),
+    path('ProductionLineOutputDetail/', ProductionLineOutputDetail.as_view(), name='ProductionLineOutputDetail'),
+
+    path('DailyAttendanceView/', DailyAttendanceView.as_view(), name='DailyAttendanceView'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
