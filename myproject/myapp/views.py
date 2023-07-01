@@ -404,6 +404,9 @@ class LineDataEntrySave(View):
         total_menpower = int(op_qty)+int(hp_qty)
         acc_men_cmp = float(acc_total_cmp)/int(total_menpower)
 
+        #get production percentage
+        # per = total_shift_data
+
         
         po = DailyProductionOuput.objects.filter(id=data_id).update(
             shift_1=shift_1,
@@ -463,9 +466,33 @@ class ProductionLineOutputDetail(View):
         a = int(dt)/int(wh)
         shift = int(a)
 
+        li = ProductionLine.objects.all()
 
         daily_target_view = DailyProductionOuput.objects.values('line').annotate(sum=Sum('daily_target'),stock=Sum('input_qty'),t_s1=Sum('shift_1'), t_s2=Sum('shift_2'), t_s3=Sum('shift_3'), t_s4=Sum('shift_4'), t_s5=Sum('shift_5'), t_s6=Sum('shift_6'), t_s7=Sum('shift_7'), t_s8=Sum('shift_8'), t_s9=Sum('shift_9'), t_s10=Sum('shift_10'), t_s11=Sum('shift_11'), t_s12=Sum('shift_12'),t_total_output_qty=Sum('total_output_qty')).filter(date=datetime.datetime.now(), line=pline)
-        context = {'daily_target_view':daily_target_view, 'daily_style':daily_style, 'shift':shift, 'pline':pline, 'dt':dt, 'daily_rank':daily_rank}
+        line1 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'), t_total_output_qty=Sum('total_output_qty')).filter(date=datetime.datetime.now(),line=li[0].ProductionLine)
+        line2 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'),
+                                                                                     t_total_output_qty=Sum(
+                                                                                         'total_output_qty')).filter(
+            date=datetime.datetime.now(), line=li[1].ProductionLine)
+        line3 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'),
+                                                                                     t_total_output_qty=Sum(
+                                                                                         'total_output_qty')).filter(
+            date=datetime.datetime.now(), line=li[2].ProductionLine)
+        line4 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'),
+                                                                                     t_total_output_qty=Sum(
+                                                                                         'total_output_qty')).filter(
+            date=datetime.datetime.now(), line=li[3].ProductionLine)
+        line5 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'),
+                                                                                     t_total_output_qty=Sum(
+                                                                                         'total_output_qty')).filter(
+            date=datetime.datetime.now(), line=li[4].ProductionLine)
+        line6 = DailyProductionOuput.objects.values('line', 'daily_target').annotate(sum=Sum('daily_target'),
+                                                                                     t_total_output_qty=Sum(
+                                                                                         'total_output_qty')).filter(
+            date=datetime.datetime.now(), line=li[5].ProductionLine)
+
+
+        context = {'daily_target_view':daily_target_view, 'daily_style':daily_style, 'shift':shift, 'pline':pline, 'dt':dt, 'daily_rank':daily_rank,'line1':line1,'line2':line2,'line3':line3,'line4':line4,'line5':line5,'line6':line6}
         return render(request, 'ProductionLineOutputDetail.html', context)
     # template_name = 'ProductionLineOutputDetail.html'
     

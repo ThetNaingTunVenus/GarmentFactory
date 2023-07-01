@@ -1381,62 +1381,6 @@
 </div>
 </section>
 
-<section>
-    <p id="demo"></p>
-    <script>
-
-{% for p in line1 %}
-var a1 = {{p.t_total_output_qty}}/{{p.sum}}*100;
-{% endfor %}
-
-
-{% for q in line2 %}
-var a2 = {{q.t_total_output_qty}}/{{q.sum}}*100;
-{% endfor %}
-
-
-{% for q3 in line3 %}
-var a3 = {{q3.t_total_output_qty}}/{{q3.sum}}*100;
-{% endfor %}
-
-const cars = [
-{% for p1 in line1 %}
-  {type:"{{p1.line}}", year:a1},
-{% endfor %}
-
-{% for p2 in line2 %}
-  {type:"{{p2.line}}", year:a2},
-{% endfor %}
-
-
-{% for p3 in line3 %}
-  {type:"{{p3.line}}", year:a3},
-{% endfor %}
-
-
-{% for p4 in line4 %}
-  {type:"{{p4.line}}", year:2001},
-{% endfor %}
-
-  {type:"BMW", year:2010}
-];
-displayCars();
-
-cars.sort(function(a, b){return a.year - b.year});
-displayCars();
-
-function displayCars() {
-  document.getElementById("demo").innerHTML =
-  cars[0].type + " " + cars[0].year + "<br>" +
-  cars[1].type + " " + cars[1].year + "<br>" +
-  cars[2].type + " " + cars[2].year + "<br>" +
-  cars[3].type + " " + cars[3].year;
-}
-
-    </script>
-</section>
-
-
 
 </div>
 <!-- welcome modal start -->
