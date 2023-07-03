@@ -109,10 +109,9 @@
             </thead>
             <tbody>
             
-            <tr class="bg-success">
-                <th colspan="4" class="text-center h1">
+            <tr class="">
+                <th colspan="4" class="text-center h1" >
                     <strong>{{pline}}</strong>
-                    
 
                 </th>
             </tr>
@@ -125,9 +124,6 @@
                     <td><h1 class="">Output/Target</h1></td>
                     
             </tr>
-
-
-            
 
             {% for p in daily_target_view %}
             
@@ -188,8 +184,8 @@
     <div class="col-md-4">
         <table class="table stripe">
             <tr class="">
-                <th colspan="3" class="text-center h1">
-                    <strong>Rank</strong>
+                <th colspan="3" class="text-center h1" id="">
+                    <span id="gettime"></span>
                     
 
                 </th>
@@ -347,6 +343,23 @@ function displayCars() {
   document.getElementById("per6").innerHTML = line[0].per.toFixed(2);
 
 }
+
+//get Time
+const getTimeAMPMFormat = (date) => {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  hours = hours < 10 ? '0' + hours : hours;
+  // appending zero in the start if hours less than 10
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  return hours + ':' + minutes + ' ' + ampm;
+};
+document.getElementById("gettime").innerHTML = getTimeAMPMFormat(new Date);
+//console.log(getTimeAMPMFormat(new Date));
+
+
 
 </script>
 <!-- rank end -->

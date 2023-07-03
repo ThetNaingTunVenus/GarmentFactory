@@ -7,12 +7,12 @@
     <title>{{title}}</title>
 
     <!-- Auto Refresh -->
-    <!-- <script>
+    <script>
 		function autoRefresh() {
 			window.location = window.location.href;
 		}
 		setInterval('autoRefresh()', 10000);
-	</script> -->
+	</script>
 
     <!-- Site favicon -->
     <link
@@ -153,11 +153,22 @@
                 <th><script>document.write({{p.daily_target}}/{{p.wok_hr}});</script></th>
                 <th><script>document.write({{p.daily_target}}/{{p.wok_hr}});</script></th>
                 
-                <td rowspan="2" class="rankcolor">
-                	<h4 class="rc">
+                <td rowspan="2" class="rankcolor" id="td1">
+                	<h4 class="rc" id="l1">
                 	<script type = "text/javascript">
                 		var a = {{p.t_total_output_qty}}/{{p.sum}}*100;
-                		document.write(parseFloat(a).toFixed(2))
+                		//document.write(parseFloat(a).toFixed(2))
+                		if (a < 50) {
+  							document.getElementById("td1").style.backgroundColor ='red';
+  							document.getElementById("l1").innerHTML = parseFloat(a).toFixed(2);
+						} else if (a < 100){
+  							document.getElementById("td1").style.backgroundColor ='yellow';
+  							document.getElementById("l1").innerHTML = parseFloat(a).toFixed(2);
+						} else {
+							document.getElementById("td1").style.backgroundColor ='#35fc03';
+  							document.getElementById("l1").innerHTML = parseFloat(a).toFixed(2);
+						}
+
 
 
                 	</script>%
