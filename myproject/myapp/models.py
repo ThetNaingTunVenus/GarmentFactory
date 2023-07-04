@@ -112,3 +112,25 @@ class DailyProductionLineMenPower(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class WareHouse(models.Model):
+    id = models.AutoField(primary_key=True)
+    warehouse_name = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class FabricInventory(models.Model):
+    supplier_name = models.CharField(max_length=200)
+    buyer_name = models.CharField(max_length=200)
+    po_style_no = models.CharField(max_length=200)
+    item_name = models.CharField(max_length=200, blank=True, null=True)
+    chall_invoice_no = models.CharField(max_length=200, blank=True, null=True)
+    fabric_construction = models.CharField(max_length=200, blank=True, null=True)
+    fabric_width = models.CharField(max_length=200, blank=True, null=True)
+    fabric_composition = models.CharField(max_length=200, blank=True, null=True)
+    color = models.CharField(max_length=200, blank=True, null=True)
+    receive_qty = models.PositiveIntegerField(default=0)
+    warehouse = models.CharField(max_length=200)
+    receive_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

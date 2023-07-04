@@ -512,4 +512,3 @@ class DailyAttendanceView(View):
         return redirect('myapp:DailyAttendanceView')
 
 
-
