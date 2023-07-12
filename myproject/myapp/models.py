@@ -134,3 +134,15 @@ class FabricInventory(models.Model):
     receive_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class AccInventoy(models.Model):
+    supplier_name = models.CharField(max_length=200)
+    buyer_name = models.CharField(max_length=200)
+    po_style_no = models.CharField(max_length=200)
+    receive_qty = models.PositiveIntegerField(default=0)
+    sku = models.CharField(max_length=200, blank=True, null=True)
+    sewing_finishing = models.CharField(max_length=200, blank=True, null=True)
+    warehouse = models.CharField(max_length=200)
+    receive_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
