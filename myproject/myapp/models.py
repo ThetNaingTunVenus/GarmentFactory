@@ -146,3 +146,25 @@ class AccInventoy(models.Model):
     receive_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class AccImage(models.Model):
+    accinv = models.ForeignKey(
+        AccInventoy, on_delete=models.CASCADE, null=True
+    )
+    image = models.ImageField(blank=True, upload_to='images')
+
+    def __str__(self):
+        return self.accinv.po_style_no
+
+
+class AccVariant(models.Model):
+    accinv = models.ForeignKey(
+        AccInventoy, on_delete=models.CASCADE
+        )
+    size = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField(default=1)
+    remark = models.CharField(max_length=100, blank=True,null=True)
+
+    def __str__(self):
+        return self.accinv.po_style_no
+

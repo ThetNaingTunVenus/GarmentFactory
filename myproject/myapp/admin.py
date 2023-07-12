@@ -29,3 +29,7 @@ admin.site.register(DailyProductionLineMenPower,DailyProductionLineMenPowerAdmin
 
 
 admin.site.register(OrderQty)
+
+admin.site.register(AccInventoy)
+
+admin.site.register(AccVariant)

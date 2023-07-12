@@ -29,5 +29,11 @@ urlpatterns = [
     path('ProductionLineOutputDetail/', ProductionLineOutputDetail.as_view(), name='ProductionLineOutputDetail'),
 
     path('DailyAttendanceView/', DailyAttendanceView.as_view(), name='DailyAttendanceView'),
+
+    path('AccInventoyList/', AccInventoyList.as_view(), name='AccInventoyList'),
+    path('create/', ProductCreate.as_view(), name='create_product'),
+    path('update/<int:pk>/', ProductUpdate.as_view(), name='update_product'),
+    path('delete-image/<int:pk>/', delete_image, name='delete_image'),
+    path('delete-variant/<int:pk>/', delete_variant, name='delete_variant'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

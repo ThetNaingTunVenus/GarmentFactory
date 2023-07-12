@@ -4,9 +4,10 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Sum,Count,F,Avg
 from django.http import HttpResponse,HttpResponseRedirect
-from django.views.generic import TemplateView, View, CreateView, DetailView,FormView
+from django.views.generic import ListView
+from django.views.generic import TemplateView, View, CreateView, DetailView,FormView,ListView,UpdateView
 from django.urls import reverse_lazy
-
+from django.contrib import messages
 from django.core.paginator import Paginator
 
 from .forms import *
@@ -512,3 +513,121 @@ class DailyAttendanceView(View):
         return redirect('myapp:DailyAttendanceView')
 
 
+# ======== AccInventoyForm ============
+class AccInventoyList(View):
+    def get(self,request):
+        acc = AccInventoy.objects.all()
+        context = {'acc': acc,}
+        return render(request, 'AccInventoyList.html', context)
+
+class ProductInline():
+    form_class = AccInventoyForm
+    model = AccInventoy
+    template_name = "acc_create_or_update.html"
+
+    def form_valid(self, form):
+        named_formsets = self.get_named_formsets()
+        if not all((x.is_valid() for x in named_formsets.values())):
+            return self.render_to_response(self.get_context_data(form=form))
+
+        self.object = form.save()
+
+        # for every formset, attempt to find a specific formset save function
+        # otherwise, just save.
+        for name, formset in named_formsets.items():
+            formset_save_func = getattr(self, 'formset_{0}_valid'.format(name), None)
+            if formset_save_func is not None:
+                formset_save_func(formset)
+            else:
+                formset.save()
+        return redirect('myapp:AccInventoyList')
+
+    def formset_variants_valid(self, formset):
+        """
+        Hook for custom formset saving.. useful if you have multiple formsets
+        """
+        variants = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this, if you have can_delete=True parameter set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for variant in variants:
+            variant.accinv = self.object
+            variant.save()
+
+    def formset_images_valid(self, formset):
+        """
+        Hook for custom formset saving.. useful if you have multiple formsets
+        """
+        images = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this, if you have can_delete=True parameter set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for image in images:
+            image.accinv = self.object
+            image.save()
+
+
+class ProductCreate(ProductInline, CreateView):
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductCreate, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        return ctx
+
+    def get_named_formsets(self):
+        if self.request.method == "GET":
+            return {
+                'variants': VariantFormSet(prefix='variants'),
+                'images': ImageFormSet(prefix='images'),
+            }
+        else:
+            return {
+                'variants': VariantFormSet(self.request.POST or None, self.request.FILES or None, prefix='variants'),
+                'images': ImageFormSet(self.request.POST or None, self.request.FILES or None, prefix='images'),
+            }
+
+class ProductUpdate(ProductInline, UpdateView):
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductUpdate, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        return ctx
+
+    def get_named_formsets(self):
+        return {
+            'variants': VariantFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='variants'),
+            'images': ImageFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='images'),
+        }
+
+
+
+def delete_image(request, pk):
+    try:
+        image = AccImage.objects.get(id=pk)
+    except AccImage.DoesNotExist:
+        messages.success(
+            request, 'Object Does not exit'
+            )
+        return redirect('myapp:update_product', pk=image.accinv.id)
+
+    image.delete()
+    messages.success(
+            request, 'Image deleted successfully'
+            )
+    return redirect('myapp:update_product', pk=image.accinv.id)
+
+
+def delete_variant(request, pk):
+    try:
+        variant = AccVariant.objects.get(id=pk)
+    except AccVariant.DoesNotExist:
+        messages.success(
+            request, 'Object Does not exit'
+            )
+        return redirect('myapp:update_product', pk=variant.accinv.id)
+
+    variant.delete()
+    messages.success(
+            request, 'Variant deleted successfully'
+            )
+    return redirect('myapp:update_product', pk=variant.accinv.id)
