@@ -5,7 +5,7 @@
 
 <div class="row pb-10">
 
-    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
         <div class="card-box height-100-p widget-style3">
             <div class="d-flex flex-wrap">
                 <div class="widget-data">
@@ -15,18 +15,18 @@
                     </div>
                 </div>
                 <div class="widget-icon">
-                    <div class="icon" data-color="#00eccf">
+                    <div class="icon" data-color="#05f511">
                         <i class="icon-copy dw dw-delivery-truck-2"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
+    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
         <div class="card-box height-100-p widget-style3">
             <div class="d-flex flex-wrap">
                 <div class="widget-data">
-                    <div class="weight-700 font-24 text-dark"><a href="{% url 'myapp:create_product' %}">Output</a></div>
+                    <div class="weight-700 font-24 text-dark"><a href="{% url 'myapp:AccVarientList' %}">Output</a></div>
                     <div class="font-14 text-secondary weight-500">
 
                     </div>
@@ -35,6 +35,24 @@
                     <div class="icon" data-color="#eb4034">
 
                         <i class="icon-copy dw dw-factory"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-6 mb-20">
+        <div class="card-box height-100-p widget-style3">
+            <div class="d-flex flex-wrap">
+                <div class="widget-data">
+                    <div class="weight-700 font-24 text-dark"><a href="{% url 'myapp:create_product' %}">Report</a></div>
+                    <div class="font-14 text-secondary weight-500">
+
+                    </div>
+                </div>
+                <div class="widget-icon">
+                    <div class="icon" data-color="#05f511">
+
+                        <i class="icon-copy dw dw-profits-1"></i>
                     </div>
                 </div>
             </div>
@@ -72,7 +90,7 @@
                 <td class="">{{ a.po_style_no }}</td>
                                 <td>{{a.receive_qty}}</td>
                 <td class=""><a href="#"><b>{{a.sku}}</b></a></td>
-                <td class=""><a href="{% url 'myapp:update_product' a.id %}" class="btn btn-sm btn-danger">Edit</a></td>
+                <td class=""><a href="{% url 'myapp:update_product' a.id %}" class="btn btn-sm btn-info"><i class="icon-copy dw dw-edit-file"></i></a></td>
                 <td>{{a.warehouse}}</td>
 
 

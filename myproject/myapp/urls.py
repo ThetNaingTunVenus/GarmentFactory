@@ -31,6 +31,7 @@ urlpatterns = [
     path('DailyAttendanceView/', DailyAttendanceView.as_view(), name='DailyAttendanceView'),
 
     path('AccInventoyList/', AccInventoyList.as_view(), name='AccInventoyList'),
+    path('AccVarientList/', AccVarientList.as_view(), name='AccVarientList'),
     path('create/', ProductCreate.as_view(), name='create_product'),
     path('update/<int:pk>/', ProductUpdate.as_view(), name='update_product'),
     path('delete-image/<int:pk>/', delete_image, name='delete_image'),

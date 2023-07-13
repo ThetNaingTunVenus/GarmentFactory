@@ -41,14 +41,14 @@ class AccInventoyForm(forms.ModelForm):
 
     class Meta:
         model = AccInventoy
-        fields = ['supplier_name','buyer_name','po_style_no','receive_qty','sku','warehouse','receive_date']
+        fields = ['supplier_name','buyer_name','po_style_no','receive_qty','sku','receive_date','warehouse']
         widgets = {
             'supplier_name': forms.TextInput(attrs={'class': 'form-control'}),
             'buyer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'po_style_no': forms.TextInput(attrs={'class': 'form-control'}),
             'receive_qty': forms.NumberInput(attrs={'class': 'form-control'}),
             'sku': forms.TextInput(attrs={'class': 'form-control'}),
-            'warehouse': forms.TextInput(attrs={'class': 'form-control'}),
+            'warehouse': forms.Select(attrs={'class': 'form-control'}),
             'receive_date': forms.DateInput(attrs={'class': 'form-control', 'type':'date'}),
 
 

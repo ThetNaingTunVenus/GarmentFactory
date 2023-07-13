@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="card-box mb-30">
+    <div class="pd-20">
+        <h4 class="text-blue h4">Inventory Acc List</h4>
+
+    </div>
+    <div class="pb-20">
+        <table class="data-table table stripe hover nowrap">
+            <thead>
+            <tr class="table-success">
+
+                <th class="">PO#</th>
+                <th class="">Size</th>
+                                <th class="">Qty</th>
+                                <th>Remark</th>
+                <th class="">Edit</th>
+                <th class="">Warehouse</th>
+
+
+
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+            <tr class="">
+                <td class="table-plus"><a href="#"><b>{{object.accinv}}</b></a></td>
+                <td class="">{{ object.size }}</td>
+                                <td>{{object.quantity}}</td>
+                <td class=""><a href="#"><b>{{object.remark}}</b></a></td>
+                <td class=""><a href="" class="btn btn-sm btn-info"><i class="icon-copy dw dw-edit-file"></i></a></td>
+                <td>--p</td>
+
+
+
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+{% endblock content %}

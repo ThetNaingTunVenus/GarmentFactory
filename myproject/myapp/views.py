@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Sum,Count,F,Avg
 from django.http import HttpResponse,HttpResponseRedirect
-from django.views.generic import ListView
+from django.views.generic.list import ListView
 from django.views.generic import TemplateView, View, CreateView, DetailView,FormView,ListView,UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -631,3 +631,14 @@ def delete_variant(request, pk):
             request, 'Variant deleted successfully'
             )
     return redirect('myapp:update_product', pk=variant.accinv.id)
+
+
+class AccVarientList(ListView):
+    # specify the model for list view
+    model = AccVariant
+    template_name = 'acc_varient_list.html'
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(AccVarientList, self).get_queryset(*args, **kwargs)
+        qs = qs.order_by("-id")
+        return qs

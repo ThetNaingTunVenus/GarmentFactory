@@ -119,6 +119,9 @@ class WareHouse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.warehouse_name
+
 class FabricInventory(models.Model):
     supplier_name = models.CharField(max_length=200)
     buyer_name = models.CharField(max_length=200)
@@ -142,10 +145,13 @@ class AccInventoy(models.Model):
     receive_qty = models.PositiveIntegerField(default=0)
     sku = models.CharField(max_length=200, blank=True, null=True)
     sewing_finishing = models.CharField(max_length=200, blank=True, null=True)
-    warehouse = models.CharField(max_length=200)
+    warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE, null=True)
     receive_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.po_style_no
 
 class AccImage(models.Model):
     accinv = models.ForeignKey(
