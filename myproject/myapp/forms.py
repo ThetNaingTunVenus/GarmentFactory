@@ -64,7 +64,7 @@ class VariantForm(forms.ModelForm):
 
     class Meta:
         model = AccVariant
-        fields = '__all__'
+        fields = ['size','quantity','remark']
         widgets = {
             'size': forms.TextInput(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control'}),

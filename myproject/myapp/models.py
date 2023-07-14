@@ -169,6 +169,7 @@ class AccVariant(models.Model):
         )
     size = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField(default=1)
+    remain_qty = models.IntegerField(default=0)
     remark = models.CharField(max_length=100, blank=True,null=True)
 
     def __str__(self):
