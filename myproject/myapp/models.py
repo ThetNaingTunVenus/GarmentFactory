@@ -178,3 +178,15 @@ class AccVariant(models.Model):
     def __str__(self):
         return self.accinv.po_style_no
 
+class AccessoriesRequestToWarehouse(models.Model):
+    style_po = models.CharField(max_length=100)
+    size = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField(default=1)
+    request_qty = models.IntegerField(default=0)
+    status = models.CharField(max_length=100)
+    request_by = models.CharField(max_length=100, blank=True, null=True)
+    accept_by = models.CharField(max_length=100, blank=True, null=True)
+    request_status = models.CharField(max_length=100)
+    request_date = models.DateField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
