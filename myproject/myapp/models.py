@@ -179,6 +179,7 @@ class AccVariant(models.Model):
         return self.accinv.po_style_no
 
 class AccessoriesRequestToWarehouse(models.Model):
+    style_po_id = models.PositiveIntegerField()
     style_po = models.CharField(max_length=100)
     size = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField(default=1)
