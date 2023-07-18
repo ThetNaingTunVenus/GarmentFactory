@@ -638,13 +638,4 @@ class AccVarientList(ListView):
     model = AccVariant
     template_name = 'acc_varient_list.html'
     context_object_name = 'objects'
-    def get_queryset(self):
-        queryset = {'obj': AccVarientList.objects.all(),
-                    # 'top_seller': AccVarientList.objects.all().filter(is_highest=True)[:5]
-                    }
-        return queryset
 
-    # def get_queryset(self, *args, **kwargs):
-    #     qs = super(AccVarientList, self).get_queryset(*args, **kwargs)
-    #     qs = qs.order_by("-id")
-    #     return qs

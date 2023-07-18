@@ -13,8 +13,8 @@
             <tr class="table-success">
                 <th class="">PO#</th>
                 <th class="">Size</th>
-                <th class="">Qty</th>
-                <th>Remark</th>
+                <th class="">AvaiableQty</th>
+                <th>Request</th>
 
             </tr>
             </thead>
@@ -23,8 +23,61 @@
             <tr class="">
                 <td class="table-plus"><a href="#"><b>{{object.accinv}}</b></a></td>
                 <td class="">{{ object.size }}</td>
-                <td class="badge badge-info">{{object.quantity}}</td>
-                <td class=""><a href="#"><b>{{object.remark}}</b></a></td>
+                <td>{{object.quantity}}</td>
+                <td>
+                    <a
+                            href="#"
+                            class="btn-primary btn-sm"
+                            data-toggle="modal"
+                            data-target="#Medium-modal{{object.id}}"
+                            type="button"
+                    >Request
+
+                    </a>
+
+                    <div
+									class="modal fade"
+									id="Medium-modal{{object.id}}"
+									tabindex="-1"
+									role="dialog"
+									aria-labelledby="myLargeModalLabel"
+									aria-hidden="true"
+								>
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title" id="myLargeModalLabel">
+													Large modal{{object.id}}{{object.size}}
+												</h4>
+												<button
+													type="button"
+													class="close"
+													data-dismiss="modal"
+													aria-hidden="true"
+												>
+													×
+												</button>
+											</div>
+											<div class="modal-body">
+                                                <input type="text" class="form-control">
+											</div>
+											<div class="modal-footer">
+												<button
+													type="button"
+													class="btn btn-secondary"
+													data-dismiss="modal"
+												>
+													Close
+												</button>
+												<button type="button" class="btn btn-primary">
+													Save changes
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+                </td>
 
 
             </tr>
@@ -33,7 +86,6 @@
         </table>
     </div>
 </div>
-
 
 
 {% endblock content %}
