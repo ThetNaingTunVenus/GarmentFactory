@@ -37,3 +37,4 @@ admin.site.register(AccInventoy)
 
 admin.site.register(AccImage)
 admin.site.register(WareHouse)
+admin.site.register(AccessoriesRequestToWarehouse)
